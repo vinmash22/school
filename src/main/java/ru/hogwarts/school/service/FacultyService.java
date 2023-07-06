@@ -34,13 +34,7 @@ public class FacultyService {
         facultyRepository.deleteById(id);
     }
 
-    // public Collection<Faculty> findByColor(String color) {
-    //  ArrayList<Faculty> result = new ArrayList<>();
-    //   for (Faculty faculty : faculties.values()) {
-    //      if (Objects.equals(faculty.getColor(), color)) {
-    //          result.add(faculty);
-    //     }
-    //  }
-    //  return result;
-    // }
+    public Collection<Faculty> findByColor(String color) {
+      return facultyRepository.findByColor(color);
+    }
 }

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -31,14 +32,7 @@ public class StudentService {
     public void deleteStudent(long id) {
         studentRepository.deleteById(id);
     }
-
-  //  public Collection<Student> findByAge(int age) {
-   //     ArrayList<Student> result = new ArrayList<>();
-    //    for (Student student : students.values()) {
-   //         if (student.getAge() == age) {
-   //             result.add(student);
-   //         }
-   //     }
-    //    return result;
-  //  }
-}
+    public Collection<Student> findByAge(int age) {
+        return studentRepository.findByAge(age);
+    }
+    }
