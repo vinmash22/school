@@ -33,6 +33,23 @@ public class StudentController {
         return studentService.addStudent(student);
     }
 
+    @GetMapping
+    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) int age) {
+        if (age > 0) {
+            return ResponseEntity.ok(studentService.findByAge(age));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @GetMapping("/betweenAge")
+    public ResponseEntity<Collection<Student>> findStudentsByAge(@RequestParam(required = false) int from,
+                                                                 @RequestParam(required = false) int to) {
+        if (from > 0 && to > 0 && from < to) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(from, to));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
+    }
+
     @PutMapping
     public ResponseEntity<Student> editStudent(@RequestBody Student student) {
         Student foundStudent = studentService.editStudent(student);
@@ -48,11 +65,4 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
- @GetMapping
-   public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) int age) {
-      if (age > 0) {
-           return ResponseEntity.ok(studentService.findByAge(age));
-      }
-      return ResponseEntity.ok(Collections.emptyList());
-   }
 }
