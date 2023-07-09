@@ -2,7 +2,9 @@ package ru.hogwarts.school.service;
 
 import java.util.Collection;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -37,4 +39,6 @@ public class StudentService {
     public Collection<Student> findByAgeBetween(int from, int to) {
         return studentRepository.findByAgeBetween(from, to);
     }
+
+    public Collection<Student> getStudentsByFacultyID(long facultyId){return studentRepository.getStudentsByFacultyID(facultyId);}
 }
