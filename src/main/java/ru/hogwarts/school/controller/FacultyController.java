@@ -64,8 +64,10 @@ public class FacultyController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
-    @GetMapping("/{facultyId}/studentsInFaculty")
-    public Collection<Student> getStudentsByFaculty(@PathVariable long facultyId) {
-        return studentService.getStudentsByFacultyID(facultyId);
+    @GetMapping("/{id}/students")
+    public Collection<Student> getStudents(@PathVariable Long id) {
+        return facultyService.findFaculty(id).getStudents();
     }
+
 }
+

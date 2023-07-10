@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Objects;
+
 @Entity
 public class Student {
     @Id
@@ -12,7 +13,7 @@ public class Student {
     private String name;
     private int age;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 

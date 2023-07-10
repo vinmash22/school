@@ -32,13 +32,12 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-    public Collection<Student> findByAge(int age) {
+    public Collection<Student> findByAge(int age){
         return studentRepository.findByAge(age);
     }
-
     public Collection<Student> findByAgeBetween(int from, int to) {
         return studentRepository.findByAgeBetween(from, to);
     }
 
-    public Collection<Student> getStudentsByFacultyID(long facultyId){return studentRepository.getStudentsByFacultyID(facultyId);}
-}
+
+ }
