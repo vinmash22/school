@@ -1,8 +1,10 @@
 package ru.hogwarts.school.model;
 
+
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
+
 @Entity
 public class Avatar {
     @Id
@@ -13,6 +15,7 @@ public class Avatar {
     private String mediaType;
     @Lob
     private byte[] data;
+
     @OneToOne
     private Student student;
 

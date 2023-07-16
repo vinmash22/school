@@ -63,11 +63,9 @@ public class FacultyController {
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
-
     @GetMapping("/{id}/students")
     public Collection<Student> getStudents(@PathVariable Long id) {
         return facultyService.findFaculty(id).getStudents();
     }
-
 }
 

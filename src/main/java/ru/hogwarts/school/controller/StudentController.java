@@ -68,9 +68,9 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
     }
+
     @GetMapping("/{id}/faculty")
     public Faculty findFaculty(@PathVariable Long id) {
         return studentService.findStudent(id).getFaculty();
     }
-
 }
