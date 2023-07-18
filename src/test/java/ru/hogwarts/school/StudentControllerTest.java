@@ -77,7 +77,6 @@ public class StudentControllerTest {
 
         int age = 24;
                studentsExpected.add(restTemplate.postForObject("http://localhost:" + port + "/student", student1, Student.class));
-         restTemplate.postForObject("http://localhost:" + port + "/student", student1, Student.class);
                ResponseEntity<List<Student>> studentsActual = restTemplate.exchange(
                 "http://localhost:" + port + "/student?age=" + age,
                 HttpMethod.GET,
