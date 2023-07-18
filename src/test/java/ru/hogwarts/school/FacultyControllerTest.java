@@ -23,18 +23,14 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(FacultyController.class)
 public class FacultyControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
-    private FacultyRepository facultyRepository;
-    @SpyBean
+   @MockBean
     private FacultyService facultyService;
 
-    @InjectMocks
-    private FacultyController facultyController;
 
     @Test
     public void createFaculty() throws Exception {
@@ -43,28 +39,29 @@ public class FacultyControllerTest {
         String facultyName = "testFaculty";
         String facultyColor = "testColor";
         JSONObject facultyObject = new JSONObject();
-        Faculty faculty = new Faculty();
+
 
         facultyObject.put("id", facultyId);
         facultyObject.put("name", facultyName);
         facultyObject.put("color", facultyColor);
 
+        Faculty faculty = new Faculty();
         faculty.setId(facultyId);
         faculty.setName(facultyName);
         faculty.setColor(facultyColor);
 
 
-        when(facultyRepository.save(any(Faculty.class))).thenReturn(faculty);
-       when(facultyRepository.findById(any(Long.class))).thenReturn(Optional.of(faculty));
+        when(facultyService.addFaculty(faculty)).thenReturn(faculty);
+        when(facultyService.findFaculty(faculty.getId())).thenReturn(faculty);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/faculty") //send
                         .content(facultyObject.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()) //receive
+                .andExpect(status().isOk())//receive
                 .andExpect(jsonPath("$.name").value(facultyName))
-                .andExpect(jsonPath("$.color").value(facultyColor))
-                .andExpect(jsonPath("$.id").value(facultyId));
+               .andExpect(jsonPath("$.color").value(facultyColor))
+               .andExpect(jsonPath("$.id").value(facultyId));
     }
 }

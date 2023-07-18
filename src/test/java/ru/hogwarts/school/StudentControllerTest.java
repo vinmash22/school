@@ -2,7 +2,6 @@ package ru.hogwarts.school;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +10,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.hogwarts.school.controller.StudentController;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -19,7 +17,6 @@ import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,9 +38,9 @@ public class StudentControllerTest {
     private TestRestTemplate restTemplate;
 
     @AfterEach
-    public void clearRepository() {
+   public void clearRepository() {
         studentRepository.deleteAll();
-    }
+   }
 
     @Test
     public void contextLoads() throws Exception {
