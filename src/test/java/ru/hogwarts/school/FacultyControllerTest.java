@@ -1,6 +1,7 @@
 package ru.hogwarts.school;
 
 import net.minidev.json.JSONObject;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,12 +13,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.hogwarts.school.controller.FacultyController;
+import ru.hogwarts.school.dto.FacultyDTO;
+import ru.hogwarts.school.dto.StudentDTO;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
+import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.FacultyService;
+import ru.hogwarts.school.service.StudentService;
+import ru.hogwarts.school.dto.FacultyDTO;
+import ru.hogwarts.school.dto.StudentDTO;
 
-import java.util.Optional;
+import java.util.*;
 
+import static com.fasterxml.jackson.databind.type.LogicalType.Collection;
 import static org.hamcrest.core.IsInstanceOf.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,31 +37,40 @@ public class FacultyControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-   @MockBean
+    @MockBean
+    FacultyRepository facultyRepository;
+    @MockBean
+    StudentRepository studentRepository;
+    @MockBean
+    FacultyDTO  facultyDTO;
+    @MockBean
+    StudentDTO studentDTO;
+    @SpyBean
+    private StudentService studentService;
+    @SpyBean
     private FacultyService facultyService;
 
+    Long facultyId = 1L;
+    String facultyName = "testFaculty";
+    String facultyColor = "testColor";
+    JSONObject facultyObject = new JSONObject();
+    Faculty faculty = new Faculty();
 
-    @Test
-    public void createFaculty() throws Exception {
-
-        Long facultyId = 1L;
-        String facultyName = "testFaculty";
-        String facultyColor = "testColor";
-        JSONObject facultyObject = new JSONObject();
-
-
+    @BeforeEach
+    public void init() throws Exception {
         facultyObject.put("id", facultyId);
         facultyObject.put("name", facultyName);
         facultyObject.put("color", facultyColor);
 
-        Faculty faculty = new Faculty();
         faculty.setId(facultyId);
         faculty.setName(facultyName);
         faculty.setColor(facultyColor);
+    }
 
-
+    @Test
+    public void saveFacultyTest() throws Exception {
         when(facultyService.addFaculty(faculty)).thenReturn(faculty);
-        when(facultyService.findFaculty(faculty.getId())).thenReturn(faculty);
+        when(facultyRepository.findById(faculty.getId())).thenReturn(Optional.of(faculty));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/faculty") //send
@@ -61,7 +79,87 @@ public class FacultyControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())//receive
                 .andExpect(jsonPath("$.name").value(facultyName))
-               .andExpect(jsonPath("$.color").value(facultyColor))
-               .andExpect(jsonPath("$.id").value(facultyId));
+                .andExpect(jsonPath("$.color").value(facultyColor))
+                .andExpect(jsonPath("$.id").value(facultyId));
+
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/faculty/1") //send
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())//receive
+                .andExpect(jsonPath("$.name").value(facultyName))
+                .andExpect(jsonPath("$.color").value(facultyColor))
+                .andExpect(jsonPath("$.id").value(facultyId));
+
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/faculty") //send
+                        .content(facultyObject.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())//receive
+                .andExpect(jsonPath("$.name").value(facultyName))
+                .andExpect(jsonPath("$.color").value(facultyColor))
+                .andExpect(jsonPath("$.id").value(facultyId));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/faculty/1") //send
+                        .content(facultyObject.toString())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());//receive
+    }
+
+    @Test
+    void getFacultyByColorOrName() throws Exception {
+        Collection<Faculty> faculties = new ArrayList<>(
+                Arrays.asList(
+                        new Faculty(1L, "bio", "green"),
+                        new Faculty(2L, "it", "white"),
+                        new Faculty(3L, "math", "red")
+                )
+        );
+
+        when(facultyRepository.findByColor(faculty.getColor())).thenReturn(faculties);
+        when(facultyRepository.findByNameIgnoreCase(faculty.getColor())).thenReturn(faculties);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/faculty?name=" + facultyName + "&color=" + facultyColor))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getAll() throws Exception {
+        Collection<Faculty> faculties = new ArrayList<>(
+                Arrays.asList(
+                        new Faculty(1L, "bio", "green"),
+                        new Faculty(2L, "it", "white"),
+                        new Faculty(3L, "math", "red")
+                )
+        );
+
+        when(facultyService.getAll()).thenReturn(faculties);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/faculty/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(faculties.size()));
+    }
+
+    @Test
+    void getStudents() throws Exception {
+        FacultyDTO facultyDTO=new FacultyDTO(1, "name", "red");
+         StudentDTO studentDTO = new StudentDTO(1, "1", 24,facultyDTO);
+        Collection<StudentDTO> studentDTOS = new ArrayList<>();
+        studentDTOS.add(studentDTO);
+
+        when(facultyRepository.findById(faculty.getId())).thenReturn(Optional.of(faculty));
+
+        when(facultyService.findStudentByFaculty(faculty.getId())).thenReturn(studentDTOS);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/faculty/" + faculty.getId() + "getStudents"))
+                .andExpect(status().isOk())
+               .andExpect(jsonPath("$[0].name").value("1"))
+                .andExpect(jsonPath("$[0].age").value(24))
+                .andExpect(jsonPath("$[0].id").value(1L));
     }
 }
+
+
