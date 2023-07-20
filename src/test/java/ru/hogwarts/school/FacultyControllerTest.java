@@ -41,10 +41,6 @@ public class FacultyControllerTest {
     FacultyRepository facultyRepository;
     @MockBean
     StudentRepository studentRepository;
-    @MockBean
-    FacultyDTO  facultyDTO;
-    @MockBean
-    StudentDTO studentDTO;
     @SpyBean
     private StudentService studentService;
     @SpyBean
@@ -145,21 +141,16 @@ public class FacultyControllerTest {
 
     @Test
     void getStudents() throws Exception {
-        FacultyDTO facultyDTO=new FacultyDTO(1, "name", "red");
-         StudentDTO studentDTO = new StudentDTO(1, "1", 24,facultyDTO);
-        Collection<StudentDTO> studentDTOS = new ArrayList<>();
-        studentDTOS.add(studentDTO);
-
+        Faculty faculty = new Faculty();
+        faculty.setId(facultyId);
+        faculty.setName(facultyName);
+        faculty.setColor(facultyColor);
+        faculty.setStudents(List.of(new Student(1L, "1", 24)));
         when(facultyRepository.findById(faculty.getId())).thenReturn(Optional.of(faculty));
-
-        when(facultyService.findStudentByFaculty(faculty.getId())).thenReturn(studentDTOS);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/faculty/" + faculty.getId() + "getStudents"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/faculty/" + faculty.getId() + "/students"))
                 .andExpect(status().isOk())
-               .andExpect(jsonPath("$[0].name").value("1"))
+                .andExpect(jsonPath("$[0].name").value("1"))
                 .andExpect(jsonPath("$[0].age").value(24))
                 .andExpect(jsonPath("$[0].id").value(1L));
     }
 }
-
-

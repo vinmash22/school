@@ -28,6 +28,8 @@ public class FacultyService {
     }
 
     public Faculty editFaculty(Faculty faculty) {
+
+
         return facultyRepository.save(faculty);
     }
 
@@ -48,7 +50,7 @@ public class FacultyService {
                 .map(f -> {
                     var studentDtos = new ArrayList<StudentDTO>();
                     for (Student student : f.getStudents()) {
-                        var facDto = new FacultyDTO(student.getFaculty().getId(), student.getFaculty().getName(), student.getFaculty().getColor());
+                        var facDto = new FacultyDTO(f.getId(), f.getName(), f.getColor());
                         var dto = new StudentDTO(student.getId(), student.getName(), student.getAge(), facDto);
                         studentDtos.add(dto);
                     }
