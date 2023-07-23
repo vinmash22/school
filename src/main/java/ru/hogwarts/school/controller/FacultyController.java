@@ -3,6 +3,7 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.dto.StudentDTO;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
@@ -63,11 +64,13 @@ public class FacultyController {
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
-
     @GetMapping("/{id}/students")
-    public Collection<Student> getStudents(@PathVariable Long id) {
-        return facultyService.findFaculty(id).getStudents();
+    public Collection<StudentDTO> getStudents(@PathVariable long id) {
+        return facultyService.findStudentByFaculty(id);
     }
-
+    @GetMapping("/all")
+    public Collection<Faculty> all() {
+        return facultyService.getAll();
+    }
 }
 
