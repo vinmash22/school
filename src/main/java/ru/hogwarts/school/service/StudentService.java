@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.dto.FacultyDTO;
@@ -42,6 +43,7 @@ public class StudentService {
     public Collection<Student> getAll() {
         return studentRepository.findAll();
     }
+
     public FacultyDTO findFaculty(long id) {
         return studentRepository.findById(id).map(student -> {
             FacultyDTO dto = new FacultyDTO();
@@ -51,4 +53,17 @@ public class StudentService {
             return dto;
         }).orElse(null);
     }
+
+    public int numberOfStudents() {
+        return studentRepository.numberOfStudents();
+    }
+
+    public double averageAgeOfStudents() {
+        return studentRepository.averageAgeOfStudents();
+    }
+
+    public List<Student> getLastFiveStudents() {
+        return studentRepository.getLastFiveStudents();
+    }
+
 }
