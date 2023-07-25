@@ -69,6 +69,7 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
     }
+
     @GetMapping("/{id}/faculty")
     public FacultyDTO findFaculty(@PathVariable long id) {
         return studentService.findFaculty(id);
@@ -79,4 +80,18 @@ public class StudentController {
         return studentService.getAll();
     }
 
+    @GetMapping("/count")
+    public int countStudents() {
+        return studentService.numberOfStudents();
+    }
+
+    @GetMapping("/averageAgeOfStudents")
+    public double averageAgeOfStudents() {
+        return studentService.averageAgeOfStudents();
+    }
+
+    @GetMapping("/getLastFiveStudents")
+    public Collection<Student> getLastFiveStudents() {
+        return studentService.getLastFiveStudents();
+    }
 }

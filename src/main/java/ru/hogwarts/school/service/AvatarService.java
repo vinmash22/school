@@ -11,8 +11,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
@@ -65,5 +67,11 @@ public class AvatarService {
     private String getExtensions(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
+
+    public List<Avatar> downloadAvatars(int pageNumber, int pageSize){
+        var pageRequest = PageRequest.of(pageNumber, pageSize);
+        return avatarRepository.findAll(pageRequest).getContent();
+    }
+
 }
 
