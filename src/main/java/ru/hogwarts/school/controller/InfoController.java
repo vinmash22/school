@@ -1,19 +1,20 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.hogwarts.school.service.InfoService;
+
 @RestController
 public class InfoController {
-    private final InfoService infoService;
+    private final int port;
 
-    public InfoController(InfoService infoService) {
-        this.infoService = infoService;
+    public InfoController(@Value("${server.port}") int port) {
+        this.port = port;
     }
 
     @GetMapping("/get_port")
     public int getPort() {
-        return infoService.getPort();
+        return port;
     }
 }
 
