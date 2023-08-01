@@ -13,6 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 public class AvatarService {
+
+    Logger logger = LoggerFactory.getLogger(AvatarService.class);
     @Value("${avatars.dir.path}")
     private String avatarsDir;
     //private final StudentService studentService;
@@ -39,6 +43,8 @@ public class AvatarService {
     }
 
     public void uploadAvatar(long studentId, MultipartFile avatarFile) throws IOException {
+        logger.info("Запустился метод загрузки аватара");
+        logger.error("Ошибка");
         Student student = studentRepository.getById(studentId);
         Path filePath = Path.of(avatarsDir, studentId + "." + getExtensions(avatarFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
@@ -57,18 +63,23 @@ public class AvatarService {
         avatar.setFileSize(avatarFile.getSize());
         avatar.setMediaType(avatarFile.getContentType());
         avatar.setData(avatarFile.getBytes());
+        logger.info("Сохраняем аватар");
         avatarRepository.save(avatar);
     }
 
     public Avatar findAvatar(long studentId) {
+        logger.info("Находим аватар по id студента");
+        logger.warn("аватара нет, нужно добавить");
         return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
     }
 
     private String getExtensions(String fileName) {
+        logger.info("запустился метод вывода  файла");
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
     public List<Avatar> downloadAvatars(int pageNumber, int pageSize){
+        logger.info("Получаем все аватары постранично");
         var pageRequest = PageRequest.of(pageNumber, pageSize);
         return avatarRepository.findAll(pageRequest).getContent();
     }

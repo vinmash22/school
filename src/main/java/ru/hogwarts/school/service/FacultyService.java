@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.dto.FacultyDTO;
 import ru.hogwarts.school.dto.StudentDTO;
@@ -13,6 +15,7 @@ import ru.hogwarts.school.repository.FacultyRepository;
 
 @Service
 public class FacultyService {
+    Logger logger = LoggerFactory.getLogger(FacultyService.class);
     private final FacultyRepository facultyRepository;
 
     public FacultyService(FacultyRepository facultyRepository) {
@@ -20,32 +23,41 @@ public class FacultyService {
     }
 
     public Faculty addFaculty(Faculty faculty) {
+        logger.info("запустился метод добавления факультета");
+        logger.debug("добавили факультет: {}", faculty);
         return facultyRepository.save(faculty);
     }
 
     public Faculty findFaculty(long id) {
+        logger.info("запустился метод поиска факультета по id");
+        logger.error("ошибка");
         return facultyRepository.findById(id).get();
     }
 
     public Faculty editFaculty(Faculty faculty) {
-
-
+        logger.info("запустился метод редактирования факультета");
+        logger.error("ошибка");
         return facultyRepository.save(faculty);
     }
 
     public void deleteFaculty(long id) {
+        logger.info("запустился метод удаления факультета");
+        logger.warn("метод удалит данные");
         facultyRepository.deleteById(id);
     }
 
     public Collection<Faculty> findByColor(String color) {
+        logger.info("запустился метод поиска факультета по цвету");
         return facultyRepository.findByColor(color);
     }
 
     public Collection<Faculty> findByName(String name) {
+        logger.info("запустился метод поиска факультета по названию");
         return facultyRepository.findByNameIgnoreCase(name);
     }
 
     public Collection<StudentDTO> findStudentByFaculty(long id) {
+        logger.info("запустился метод вывода списка студентов факультета");
         return facultyRepository.findById(id)
                 .map(f -> {
                     var studentDtos = new ArrayList<StudentDTO>();
@@ -60,6 +72,7 @@ public class FacultyService {
     }
 
     public Collection<Faculty> getAll() {
+        logger.info("запустился метод вывода списка факультетов");
         return facultyRepository.findAll();
     }
 }
