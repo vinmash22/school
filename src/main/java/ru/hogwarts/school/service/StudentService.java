@@ -2,6 +2,9 @@ package ru.hogwarts.school.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +85,26 @@ public class StudentService {
     public List<Student> getLastFiveStudents() {
         logger.info("запустился метод вывода пяти последних студентов");
         return studentRepository.getLastFiveStudents();
+    }
+
+    public Map<String, List<Student>> getNameBegin() {
+        return studentRepository.findAll().stream()
+                .filter(student -> student.getName().startsWith("Г"))
+                .collect(Collectors.groupingBy(Student::getName));
+    }
+
+    public double averageAgeOfStudentsStream() {
+        return studentRepository.findAll().stream()
+                .collect(
+                        Collectors.averagingDouble(Student::getAge)
+                );
+    }
+
+    public Integer step4() {
+        return Stream.iterate(1, a -> a + 1)
+                .limit(1_000_000)
+                .parallel()
+                .reduce(0, Integer::sum);
     }
 
 }

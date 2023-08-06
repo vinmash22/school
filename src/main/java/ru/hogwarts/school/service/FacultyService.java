@@ -2,6 +2,8 @@ package ru.hogwarts.school.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Optional;
 
 
 import org.slf4j.Logger;
@@ -75,5 +77,13 @@ public class FacultyService {
         logger.info("запустился метод вывода списка факультетов");
         return facultyRepository.findAll();
     }
+
+    public String getLongestNameFaculty() {
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElseThrow(() -> new IllegalArgumentException("not found any faculty"));
+    }
 }
+
 
