@@ -13,6 +13,7 @@ import ru.hogwarts.school.dto.FacultyDTO;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
+
 @Service
 public class StudentService {
     Logger logger = LoggerFactory.getLogger(StudentService.class);
@@ -107,4 +108,53 @@ public class StudentService {
                 .reduce(0, Integer::sum);
     }
 
+    public void getStudentOfStream() {
+        var students = studentRepository.findAll()
+                .stream()
+                .limit(6)
+                .collect(Collectors.toList());
+
+        System.out.println(students.get(0));
+        System.out.println(students.get(1));
+
+
+        new Thread(() -> {
+            System.out.println(students.get(2));
+            System.out.println(students.get(3));
+
+        }).start();
+
+        new Thread(() -> {
+            System.out.println(students.get(4));
+            System.out.println(students.get(5));
+
+        }).start();
+    }
+
+    public void getStudentOfStreamSync() {
+        var students = studentRepository.findAll()
+                .stream()
+                .limit(6)
+                .collect(Collectors.toList());
+
+        print(students.get(0));
+        print(students.get(1));
+
+
+        new Thread(() -> {
+            print(students.get(2));
+            print(students.get(3));
+
+        }).start();
+
+        new Thread(() -> {
+            print(students.get(4));
+            print(students.get(5));
+
+        }).start();
+    }
+
+    private synchronized void print(Object obj) {
+        System.out.println(obj.toString());
+    }
 }

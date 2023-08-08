@@ -111,4 +111,15 @@ public class StudentController {
     public int step4() {
         return studentService.step4();
     }
+
+    @GetMapping("/parallelStream")
+    public void getStudentsOfStream() {
+        studentService.getStudentOfStream();
+    }
+
+    @GetMapping("/synchronizedMethod")
+    public void getStudentOfStreamSync() {
+        studentService.getStudentOfStreamSync();
+    }
 }
+
